@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATR Test (Physical Test Center)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for Radial Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght=400;600;800&display=swap');
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white animate-pulse">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                    ATR Test
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Connection Status Indicator -->
+                <div id="connection-badge" class="text-xs px-2 py-1 rounded bg-amber-500/20 text-amber-400 font-semibold">
+                    <i class="fa-solid fa-circle-nodes mr-1"></i>로컬 오프라인 모드
+                </div>
+                <div class="text-sm text-slate-400 font-medium hidden sm:block">
+                    v1.5.2
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6">
+        <div class="w-full max-w-6xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 md:p-12 transition-all duration-300">
+            
+            <!-- 1. INTRO SCREEN -->
+            <div id="screen-intro" class="space-y-10 py-6">
+                <div class="text-center space-y-4">
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+                         당신의 <span class="text-indigo-500">피지컬</span>은?
+                    </h1>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg">
+                        연타 속도, 반응 속도, 에임 정확도를 분석하여 종합적인 하드웨어 능력을 육각형 그래프로 보여줍니다.
+                    </p>
+                </div>
+
+                <!-- Test Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Card 1: Tap -->
+                    <div class="bg-slate-850 border border-slate-800 p-8 rounded-xl flex flex-col justify-between hover:border-indigo-500/50 transition-all duration-300 min-h-[250px]">
+                        <div>
+                            <div class="text-pink-500 text-4xl mb-4"><i class="fa-solid fa-keyboard"></i></div>
+                            <h3 class="text-xl font-bold mb-2 text-slate-200">1단계: 연타 측정</h3>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                10초 동안 위 화살표 키(↑)를 미친 듯이 연타하세요! 당신의 속도 한계를 시험합니다.
+                            </p>
+                        </div>
+                        <span class="text-xs text-slate-500 mt-4 block"><i class="fa-regular fa-keyboard mr-1"></i> Arrow Up(↑) 키 사용</span>
+                    </div>
+
+                    <!-- Card 2: Reaction -->
+                    <div class="bg-slate-850 border border-slate-800 p-8 rounded-xl flex flex-col justify-between hover:border-indigo-500/50 transition-all duration-300 min-h-[250px]">
+                        <div>
+                            <div class="text-emerald-500 text-4xl mb-4"><i class="fa-solid fa-gauge-high"></i></div>
+                            <h3 class="text-xl font-bold mb-2 text-slate-200">2단계: 반응속도</h3>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                화면이 초록색으로 바뀌는 순간 위 화살표 키(↑)를 누르세요! 예측 누르기는 감점됩니다. (총 3회 시행)
+                            </p>
+                        </div>
+                        <span class="text-xs text-slate-500 mt-4 block"><i class="fa-regular fa-keyboard mr-1"></i> Arrow Up(↑) 키 사용</span>
+                    </div>
+
+                    <!-- Card 3: Aim -->
+                    <div class="bg-slate-850 border border-slate-800 p-8 rounded-xl flex flex-col justify-between hover:border-indigo-500/50 transition-all duration-300 min-h-[250px]">
+                        <div>
+                            <div class="text-cyan-500 text-4xl mb-4"><i class="fa-solid fa-crosshairs"></i></div>
+                            <h3 class="text-xl font-bold mb-2 text-slate-200">3단계: 에임 측정</h3>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                15초 동안 사방에 무작위로 생겨나는 원 과녁을 정밀하게 클릭하세요! 반응형 보드 크기에 자동으로 최적화됩니다.
+                            </p>
+                        </div>
+                        <span class="text-xs text-slate-500 mt-4 block"><i class="fa-solid fa-mouse mr-1"></i> 마우스 클릭 사용</span>
+                    </div>
+                </div>
+
+                <!-- Start Button -->
+                <div class="text-center pt-6 flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="btn-start" class="px-12 py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xl rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition-all duration-200 w-full sm:w-auto">
+                        <i class="fa-solid fa-play mr-2"></i>테스트 시작하기
+                    </button>
+                    <button id="btn-intro-leaderboard" class="px-12 py-5 bg-slate-800 hover:bg-slate-700 text-white font-extrabold text-xl rounded-xl shadow-lg shadow-slate-800/30 active:scale-95 transition-all duration-200 w-full sm:w-auto">
+                        <i class="fa-solid fa-trophy mr-2 text-yellow-500"></i>명예의 전당
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. TAP TEST (연타 측정) -->
+            <div id="screen-tap" class="hidden space-y-6 text-center py-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span class="text-pink-500 font-bold text-lg"><i class="fa-solid fa-keyboard mr-2"></i>1단계: 연타 측정</span>
+                    <span class="text-slate-400 text-sm">진행률: 1 / 3</span>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-8">
+                    <p class="text-slate-400 text-base">
+                        "시작" 버튼을 누르면 카운트다운 후 10초 타이머가 작동합니다.<br>
+                        <strong>위 화살표 키(↑)</strong> 또는 아래 <strong>영역</strong>을 마구 연타하세요!
+                    </p>
+
+                    <!-- Stats Display -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                            <span class="text-sm text-slate-400 block uppercase font-semibold mb-1">남은 시간</span>
+                            <span id="tap-timer" class="text-5xl font-black text-rose-500">10.0s</span>
+                        </div>
+                        <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                            <span class="text-sm text-slate-400 block uppercase font-semibold mb-1">클릭 수 (Clicks)</span>
+                            <span id="tap-count" class="text-5xl font-black text-pink-500">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Area -->
+                    <div id="tap-area" class="h-64 bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl flex flex-col justify-center items-center cursor-pointer transition-all duration-150 active:border-pink-500/50">
+                        <div class="pointer-events-none text-slate-500 space-y-4">
+                            <i class="fa-solid fa-arrow-up text-6xl animate-bounce"></i>
+                            <p class="text-lg font-semibold">여기서 위 화살표 키(↑)를 누르거나 클릭하세요!</p>
+                        </div>
+                    </div>
+
+                    <!-- Controller -->
+                    <button id="btn-tap-start" class="w-full py-5 bg-pink-600 hover:bg-pink-500 text-white font-bold text-xl rounded-xl transition-all">
+                        시작 대기 중...
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. REACTION TEST (반응속도 측정) -->
+            <div id="screen-reaction" class="hidden space-y-6 text-center py-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span class="text-emerald-500 font-bold text-lg"><i class="fa-solid fa-gauge-high mr-2"></i>2단계: 반응속도 측정</span>
+                    <span class="text-slate-400 text-sm">진행률: 2 / 3</span>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <p class="text-slate-400 text-base">
+                        아래 대형 영역의 색상이 <span class="text-emerald-500 font-bold">초록색</span>으로 변하자마자 <strong>위 화살표 키(↑)</strong> 또는 <strong>터치/클릭</strong>을 하세요.<br>
+                        너무 성급하게 누르면 <span class="text-rose-500 font-bold">감점</span> 처리됩니다. (총 3회 진행)
+                    </p>
+
+                    <!-- Attempt State Indicator -->
+                    <div class="flex justify-center space-x-12 py-4 bg-slate-800 rounded-lg">
+                        <div>
+                            <span class="text-sm text-slate-400">진행 수:</span>
+                            <span id="reaction-attempt" class="font-bold text-slate-200 text-base">1 / 3</span>
+                        </div>
+                        <div>
+                            <span class="text-sm text-slate-400">현재까지 평균:</span>
+                            <span id="reaction-avg-display" class="font-bold text-slate-200 text-base">- ms</span>
+                        </div>
+                    </div>
+
+                    <!-- Reaction Test Click Area -->
+                    <div id="reaction-box" class="h-[450px] bg-slate-800 border border-slate-700 rounded-xl flex flex-col justify-center items-center cursor-pointer transition-colors duration-200 select-none px-8 text-center">
+                        <span id="reaction-text" class="text-3xl font-bold text-slate-300">화면을 클릭하거나 위 화살표 키(↑)를 눌러 대기 시작</span>
+                        <span id="reaction-subtext" class="text-base text-slate-400 mt-3">준비되시면 눌러주세요</span>
+                    </div>
+
+                    <!-- Current record display list -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800 text-sm">
+                            <div class="text-xs text-slate-500 mb-1">1회차</div>
+                            <div id="rec-val-1" class="font-bold text-slate-300 text-lg">-</div>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800 text-sm">
+                            <div class="text-xs text-slate-500 mb-1">2회차</div>
+                            <div id="rec-val-2" class="font-bold text-slate-300 text-lg">-</div>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800 text-sm">
+                            <div class="text-xs text-slate-500 mb-1">3회차</div>
+                            <div id="rec-val-3" class="font-bold text-slate-300 text-lg">-</div>
+                        </div>
+                    </div>
+
+                    <button id="btn-reaction-next" class="hidden w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all text-xl">
+                        에임 측정으로 넘어가기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. AIM TEST (에임 측정) -->
+            <div id="screen-aim" class="hidden space-y-4 py-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span class="text-cyan-500 font-bold text-lg"><i class="fa-solid fa-crosshairs mr-2"></i>3단계: 에임 측정</span>
+                    <span class="text-slate-400 text-sm">진행률: 3 / 3</span>
+                </div>
+
+                <div class="text-center space-y-2">
+                    <p class="text-slate-400 text-base">
+                        제한 시간 15초 이내에 보드판에 무작위로 뜨는 <span class="text-cyan-400 font-bold">목표(원)</span>를 재빠르게 클릭하세요.
+                    </p>
+                    <div class="flex justify-center space-x-8 py-3 bg-slate-800/50 rounded-lg max-w-lg mx-auto">
+                        <div>
+                            <span class="text-slate-400">남은 시간:</span>
+                            <span id="aim-timer" class="font-extrabold text-cyan-400 ml-1 text-lg">15.0s</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400">맞춘 개수:</span>
+                            <span id="aim-score" class="font-extrabold text-emerald-400 ml-1 text-lg">0</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400">미스 클릭:</span>
+                            <span id="aim-miss" class="font-extrabold text-rose-500 ml-1 text-lg">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aiming Area Container (16:9 cinematic aspect ratio and expanded max-height with automatic sizing) -->
+                <div class="relative w-full aspect-[16/9] max-h-[550px] bg-slate-950 border border-slate-800 rounded-xl overflow-hidden cursor-crosshair shadow-inner mx-auto transition-all duration-300" id="aim-board">
+                    <!-- Ready overlays / Start screen -->
+                    <div id="aim-overlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col justify-center items-center z-10 space-y-5">
+                        <i class="fa-solid fa-bullseye text-6xl text-cyan-500 animate-pulse"></i>
+                        <h3 class="text-2xl font-bold">에임 트레이닝 시작하기</h3>
+                        <button id="btn-aim-start" class="px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-all text-lg active:scale-95">
+                            준비완료! 시작
+                        </button>
+                    </div>
+
+                    <!-- The Target Element (Fully auto-responsive sizing) -->
+                    <div id="aim-target" class="absolute w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 border-2 border-white shadow-[0_0_15px_rgba(34,211,238,0.5)] cursor-pointer hidden select-none transition-all duration-75">
+                        <!-- Inside small dot for bullseye feel -->
+                        <div class="absolute inset-3 bg-white rounded-full opacity-60"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. RESULT SCREEN (종합 분석 결과) -->
+            <div id="screen-result" class="hidden space-y-8 py-4">
+                <div class="text-center space-y-2">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-indigo-400"><i class="fa-solid fa-circle-check mr-2"></i>테스트 분석 완료</h2>
+                    <p class="text-slate-400 text-base">당신의 피지컬 측정값을 AI와 정밀 분석기로 도출한 종합 성적입니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    
+                    <!-- Chart Section -->
+                    <div class="bg-slate-950 p-8 rounded-xl border border-slate-850 flex flex-col items-center justify-center">
+                        <span class="text-base font-semibold text-slate-400 mb-4">하드웨어 피지컬 육각형 그래프</span>
+                        <div class="w-full max-w-[360px] h-[360px] relative">
+                            <canvas id="result-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Stats Detail Section -->
+                    <div class="space-y-5">
+                        <div class="bg-indigo-950/40 border border-indigo-800/50 p-6 rounded-xl flex items-center justify-between">
+                            <div>
+                                <span class="text-sm text-indigo-400 font-bold block uppercase mb-1">종합 피지컬 클래스</span>
+                                <span id="final-tier" class="text-4xl font-black bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">S-TIER</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-slate-400 block mb-1">총점</span>
+                                <span id="final-score" class="text-4xl font-extrabold text-slate-100">284점</span>
+                            </div>
+                        </div>
+
+                        <!-- Grid details -->
+                        <div class="space-y-4">
+                            <!-- Tap Score Row -->
+                            <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-pink-500 text-2xl w-8 text-center"><i class="fa-solid fa-keyboard"></i></span>
+                                    <div>
+                                        <div class="text-base font-bold text-slate-200">연타 속도 (Tapping)</div>
+                                        <div id="result-tap-detail" class="text-sm text-slate-400">72 Clicks (7.2 CPS)</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="result-tap-score" class="text-lg font-extrabold text-slate-200">85점</div>
+                                    <div id="result-tap-tier" class="text-xs font-semibold text-pink-400">A급</div>
+                                </div>
+                            </div>
+
+                            <!-- Reaction Score Row -->
+                            <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-emerald-500 text-2xl w-8 text-center"><i class="fa-solid fa-gauge-high"></i></span>
+                                    <div>
+                                        <div class="text-base font-bold text-slate-200">반응 속도 (Reaction)</div>
+                                        <div id="result-reaction-detail" class="text-sm text-slate-400">평균 245 ms</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="result-reaction-score" class="text-lg font-extrabold text-slate-200">78점</div>
+                                    <div id="result-reaction-tier" class="text-xs font-semibold text-emerald-400">B급</div>
+                                </div>
+                            </div>
+
+                            <!-- Aim Score Row -->
+                            <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-cyan-500 text-2xl w-8 text-center"><i class="fa-solid fa-crosshairs"></i></span>
+                                    <div>
+                                        <div class="text-base font-bold text-slate-200">에임 정밀도 (Aiming)</div>
+                                        <div id="result-aim-detail" class="text-sm text-slate-400">22 히트 / 2 미스</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="result-aim-score" class="text-lg font-extrabold text-slate-200">92점</div>
+                                    <div id="result-aim-tier" class="text-xs font-semibold text-cyan-400">S급</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Analysis Summary Text Box -->
+                <div class="bg-slate-950 p-6 border border-slate-800 rounded-xl">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">AI 피지컬 종합 분석 보고서</h4>
+                    <p id="analysis-text" class="text-sm md:text-base text-slate-300 leading-relaxed">
+                        분석 결과를 취합 중입니다...
+                    </p>
+                </div>
+
+                <!-- Record Save Section -->
+                <div class="bg-slate-900 border border-indigo-500/50 p-6 rounded-xl space-y-4">
+                    <h4 class="text-base font-bold text-indigo-400">명예의 전당 (리더보드) 등록</h4>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="player-name" placeholder="닉네임을 입력하세요" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors text-base" maxlength="10">
+                        <button id="btn-save-record" class="py-3 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition-all text-base whitespace-nowrap">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장
+                        </button>
+                        <button id="btn-view-leaderboard" class="py-3 px-8 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg transition-all text-base whitespace-nowrap">
+                            <i class="fa-solid fa-trophy mr-2"></i>순위 보기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Restart buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button id="btn-restart" class="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg rounded-xl transition-all">
+                        <i class="fa-solid fa-rotate-left mr-2"></i>테스트 다시하기
+                    </button>
+                    <button id="btn-share" class="py-4 px-8 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-lg rounded-xl transition-all">
+                        <i class="fa-solid fa-share-nodes mr-2"></i>결과 복사하기
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6. LEADERBOARD SCREEN -->
+            <div id="screen-leaderboard" class="hidden space-y-6 py-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span class="text-yellow-500 font-bold text-2xl"><i class="fa-solid fa-trophy mr-2"></i>명예의 전당 (Top 10)</span>
+                </div>
+                
+                <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden">
+                    <table class="w-full text-base text-left text-slate-400">
+                        <thead class="text-sm text-slate-300 uppercase bg-slate-900 border-b border-slate-800">
+                            <tr>
+                                <th scope="col" class="px-6 py-5 w-24 text-center">순위</th>
+                                <th scope="col" class="px-6 py-5">닉네임</th>
+                                <th scope="col" class="px-6 py-5 text-right">총점</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-list">
+                            <tr class="border-b border-slate-800 bg-slate-900/50">
+                                <td colspan="3" class="px-6 py-16 text-center text-slate-500">
+                                    데이터를 불러오는 중입니다...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-center pt-6">
+                    <button id="btn-leaderboard-close" class="px-10 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all text-lg">
+                        돌아가기
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Custom Floating Alert Modal -->
+    <div id="custom-alert" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="bg-slate-900 border border-slate-850 p-8 rounded-2xl max-w-sm w-full mx-4 shadow-2xl space-y-4 text-center transform scale-95 transition-transform duration-200" id="custom-alert-box">
+            <div class="text-rose-500 text-4xl" id="alert-icon">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <h3 class="text-xl font-bold" id="alert-title">오류 경고!</h3>
+            <p class="text-slate-300 text-sm" id="alert-message">게임 진행에 오류가 생겼습니다.</p>
+            <button id="btn-alert-close" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition-all">
+                확인
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-slate-900 bg-slate-950/20 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-1">
+            <p>© 2026 Physical Test Center. All rights reserved.</p>
+            <p>본 게임은 게이머의 하드웨어 능력을 간이 측정하기 위한 시뮬레이터입니다.</p>
+        </div>
+    </footer>
+
+    <!-- JS Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isFirebaseActive = false;
+
+        // Offline Leaderboard Fallback (아무 기록도 없는 빈 리스트로 초기화)
+        let leaderboardData = [];
+
+        // Safe Firebase Initialization Try-Catch Block
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                if (firebaseConfig.apiKey && firebaseConfig.projectId) {
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    isFirebaseActive = true;
+                    
+                    const badge = document.getElementById('connection-badge');
+                    badge.innerHTML = '<i class="fa-solid fa-circle-nodes mr-1"></i>클라우드 동기화 모드';
+                    badge.className = "text-xs px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-semibold";
+                }
+            }
+        } catch (error) {
+            console.warn("Firebase 연결 제한 - 로컬 오프라인 모드로 자동 안전 구동됩니다.", error);
+        }
+
+        const initAuth = async () => {
+            if (!isFirebaseActive || !auth) return;
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase auth failed:", error);
+            }
+        };
+        initAuth();
+
+        if (isFirebaseActive && auth) {
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    subscribeToLeaderboard();
+                }
+            });
+        } else {
+            renderLeaderboard();
+        }
+
+        function subscribeToLeaderboard() {
+            if (!isFirebaseActive || !db) return;
+            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            onSnapshot(lbRef, (snapshot) => {
+                leaderboardData = [];
+                snapshot.forEach((doc) => {
+                    leaderboardData.push(doc.data());
+                });
+                leaderboardData.sort((a, b) => b.score - a.score);
+                renderLeaderboard();
+            }, (error) => {
+                console.error("Leaderboard database error:", error);
+            });
+        }
+
+        function renderLeaderboard() {
+            const listEl = document.getElementById('leaderboard-list');
+            listEl.innerHTML = '';
+
+            if (leaderboardData.length === 0) {
+                listEl.innerHTML = `
+                    <tr class="border-b border-slate-800 bg-slate-900/50">
+                        <td colspan="3" class="px-6 py-16 text-center text-slate-500">
+                            아직 등록된 기록이 없습니다. 첫 번째 랭커가 되어보세요!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const top10 = leaderboardData.slice(0, 10);
+            top10.forEach((record, index) => {
+                let rankStyle = "text-slate-400";
+                if (index === 0) rankStyle = "text-yellow-400 font-black text-xl";
+                else if (index === 1) rankStyle = "text-slate-300 font-bold text-lg";
+                else if (index === 2) rankStyle = "text-amber-600 font-bold text-lg";
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-800/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 text-center ${rankStyle}">${index + 1}</td>
+                    <td class="px-6 py-4 font-semibold text-slate-200 text-lg">${escapeHtml(record.name)}</td>
+                    <td class="px-6 py-4 text-right font-bold text-indigo-400 text-lg">${record.score}점</td>
+                `;
+                listEl.appendChild(tr);
+            });
+        }
+
+        function escapeHtml(unsafe) {
+            return (unsafe || "").toString()
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // State management
+        const state = {
+            currentScreen: 'intro',
+            previousScreen: 'intro',
+            scores: { tap: 0, reaction: [], aimHits: 0, aimMiss: 0 },
+            calculatedScores: { tap: 0, reaction: 0, aim: 0 },
+            finalScore: 0,
+            radarChart: null
+        };
+
+        // DOM elements
+        const screens = {
+            intro: document.getElementById('screen-intro'),
+            tap: document.getElementById('screen-tap'),
+            reaction: document.getElementById('screen-reaction'),
+            aim: document.getElementById('screen-aim'),
+            result: document.getElementById('screen-result'),
+            leaderboard: document.getElementById('screen-leaderboard')
+        };
+
+        const buttons = {
+            start: document.getElementById('btn-start'),
+            introLeaderboard: document.getElementById('btn-intro-leaderboard'),
+            tapStart: document.getElementById('btn-tap-start'),
+            reactionNext: document.getElementById('btn-reaction-next'),
+            aimStart: document.getElementById('btn-aim-start'),
+            restart: document.getElementById('btn-restart'),
+            share: document.getElementById('btn-share'),
+            alertClose: document.getElementById('btn-alert-close'),
+            saveRecord: document.getElementById('btn-save-record'),
+            viewLeaderboard: document.getElementById('btn-view-leaderboard'),
+            leaderboardClose: document.getElementById('btn-leaderboard-close')
+        };
+
+        // Alert modal mapping
+        const alertModal = {
+            container: document.getElementById('custom-alert'),
+            box: document.getElementById('custom-alert-box'),
+            icon: document.getElementById('alert-icon'),
+            title: document.getElementById('alert-title'),
+            message: document.getElementById('alert-message')
+        };
+
+        function showCustomAlert(title, message, isWarning = true) {
+            alertModal.title.innerText = title;
+            alertModal.message.innerText = message;
+            
+            if (isWarning) {
+                alertModal.icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-rose-500"></i>';
+            } else {
+                alertModal.icon.innerHTML = '<i class="fa-solid fa-circle-info text-cyan-500"></i>';
+            }
+
+            alertModal.container.classList.remove('opacity-0', 'pointer-events-none');
+            alertModal.box.classList.remove('scale-95');
+            alertModal.box.classList.add('scale-100');
+        }
+
+        buttons.alertClose.addEventListener('click', () => {
+            alertModal.container.classList.add('opacity-0', 'pointer-events-none');
+            alertModal.box.classList.remove('scale-100');
+            alertModal.box.classList.add('scale-95');
+        });
+
+        function changeScreen(screenName) {
+            Object.keys(screens).forEach(key => {
+                if(screens[key]) screens[key].classList.add('hidden');
+            });
+            if(screens[screenName]) screens[screenName].classList.remove('hidden');
+            state.currentScreen = screenName;
+        }
+
+        // --- GAME 1: TAP TEST ENGINE ---
+        let tapActive = false;
+        let tapTimerInterval = null;
+        let tapTimeRemaining = 10.0;
+        let tapClickCount = 0;
+
+        const tapArea = document.getElementById('tap-area');
+        const tapCountDisplay = document.getElementById('tap-count');
+        const tapTimerDisplay = document.getElementById('tap-timer');
+
+        buttons.start.addEventListener('click', () => {
+            // 한 판이 끝나고 다시 시작할 때 모든 점수 스키마 초기화 보장
+            state.scores = { tap: 0, reaction: [], aimHits: 0, aimMiss: 0 };
+            state.calculatedScores = { tap: 0, reaction: 0, aim: 0 };
+            state.finalScore = 0;
+            
+            resetTapGame();
+            changeScreen('tap');
+        });
+
+        buttons.tapStart.addEventListener('click', startTapCountdown);
+
+        function resetTapGame() {
+            tapActive = false;
+            clearInterval(tapTimerInterval);
+            tapTimeRemaining = 10.0;
+            tapClickCount = 0;
+            
+            tapCountDisplay.innerText = "0";
+            tapTimerDisplay.innerText = "10.0s";
+            buttons.tapStart.innerText = "카운트다운 시작";
+            buttons.tapStart.disabled = false;
+            buttons.tapStart.onclick = null; // [중요] 이전 판에서 동적 할당된 반응속도 전이용 onclick 핸들러 완벽 리셋
+            buttons.tapStart.className = "w-full py-4 bg-pink-600 hover:bg-pink-500 text-white font-bold text-lg rounded-xl transition-all";
+            tapArea.classList.add('opacity-50', 'pointer-events-none');
+        }
+
+        function startTapCountdown() {
+            buttons.tapStart.disabled = true;
+            buttons.tapStart.className = "w-full py-4 bg-slate-800 text-slate-500 font-bold text-lg rounded-xl cursor-not-allowed";
+            
+            let count = 3;
+            buttons.tapStart.innerText = `${count}...`;
+            
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    buttons.tapStart.innerText = `${count}...`;
+                } else {
+                    clearInterval(countInterval);
+                    buttons.tapStart.innerText = "연타 진행 중!!!";
+                    startTapGame();
+                }
+            }, 1000);
+        }
+
+        function startTapGame() {
+            tapActive = true;
+            tapArea.classList.remove('opacity-50', 'pointer-events-none');
+            
+            const startTime = Date.now();
+            const totalDuration = 10000;
+
+            tapTimerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                tapTimeRemaining = Math.max(0, (totalDuration - elapsed) / 1000);
+                tapTimerDisplay.innerText = tapTimeRemaining.toFixed(1) + "s";
+
+                if (tapTimeRemaining <= 0) {
+                    endTapGame();
+                }
+            }, 100);
+        }
+
+        function registerTap() {
+            if (!tapActive) return;
+            tapClickCount++;
+            tapCountDisplay.innerText = tapClickCount;
+
+            tapArea.classList.remove('bg-slate-950');
+            tapArea.classList.add('bg-pink-950/20');
+            setTimeout(() => {
+                tapArea.classList.remove('bg-pink-950/20');
+                tapArea.classList.add('bg-slate-950');
+            }, 50);
+        }
+
+        tapArea.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            registerTap();
+        });
+
+        // Global key listeners safely routed
+        let isArrowUpPressed = false;
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (!isArrowUpPressed) {
+                    isArrowUpPressed = true;
+                    if (state.currentScreen === 'tap') {
+                        registerTap();
+                    } else if (state.currentScreen === 'reaction') {
+                        handleReactionTrigger();
+                    }
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowUp') {
+                isArrowUpPressed = false;
+            }
+        });
+
+        function endTapGame() {
+            tapActive = false;
+            clearInterval(tapTimerInterval);
+            tapArea.classList.add('opacity-50', 'pointer-events-none');
+            
+            state.scores.tap = tapClickCount;
+            
+            const cps = tapClickCount / 10;
+            let score = Math.round((cps / 11) * 100);
+            if (score > 100) score = 100;
+            if (score < 0) score = 0;
+            state.calculatedScores.tap = score;
+
+            buttons.tapStart.innerText = "연타 완료! 반응속도 단계로 이동";
+            buttons.tapStart.className = "w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-lg rounded-xl transition-all cursor-pointer";
+            buttons.tapStart.disabled = false;
+
+            buttons.tapStart.onclick = () => {
+                buttons.tapStart.onclick = null;
+                initReactionGame();
+                changeScreen('reaction');
+            };
+        }
+
+
+        // --- GAME 2: REACTION TEST ENGINE ---
+        let reactionState = 'waiting';
+        let reactionStartTime = 0;
+        let reactionTimeout = null;
+        let reactionAttempts = 0;
+        const totalReactionAttempts = 3;
+
+        const reactionBox = document.getElementById('reaction-box');
+        const reactionText = document.getElementById('reaction-text');
+        const reactionSubtext = document.getElementById('reaction-subtext');
+        const reactionAttemptDisplay = document.getElementById('reaction-attempt');
+        const reactionAvgDisplay = document.getElementById('reaction-avg-display');
+
+        function initReactionGame() {
+            reactionState = 'waiting';
+            reactionAttempts = 0;
+            state.scores.reaction = [];
+            
+            reactionAttemptDisplay.innerText = `1 / ${totalReactionAttempts}`;
+            reactionAvgDisplay.innerText = '- ms';
+            
+            document.getElementById('rec-val-1').innerText = '-';
+            document.getElementById('rec-val-2').innerText = '-';
+            document.getElementById('rec-val-3').innerText = '-';
+
+            setReactionUiState('waiting');
+            buttons.reactionNext.classList.add('hidden');
+        }
+
+        function setReactionUiState(mode) {
+            reactionBox.className = "h-[450px] border rounded-xl flex flex-col justify-center items-center cursor-pointer transition-colors duration-200 select-none px-[10%] text-center ";
+            
+            switch(mode) {
+                case 'waiting':
+                    reactionBox.classList.add('bg-slate-800', 'border-slate-700');
+                    reactionText.innerText = "화면을 클릭하거나 위 화살표 키(↑)를 눌러 대기 시작";
+                    reactionSubtext.innerText = "준비되시면 눌러주세요";
+                    reactionText.className = "text-2xl md:text-3xl font-bold text-slate-300";
+                    reactionSubtext.className = "text-base text-slate-400 mt-3";
+                    break;
+                case 'holding':
+                    reactionBox.classList.add('bg-rose-600', 'border-rose-500');
+                    reactionText.innerText = "초록색 화면으로 변할 때까지 대기...";
+                    reactionSubtext.innerText = "절대 먼저 누르지 마세요!";
+                    reactionText.className = "text-3xl md:text-4xl font-black text-white animate-pulse";
+                    reactionSubtext.className = "text-base text-rose-200 mt-3";
+                    break;
+                case 'changing':
+                    reactionBox.classList.add('bg-emerald-500', 'border-emerald-400');
+                    reactionText.innerText = "지금 누르세요!!! (NOW)";
+                    reactionSubtext.innerText = "위 화살표 키 혹은 마우스 클릭!";
+                    reactionText.className = "text-4xl md:text-5xl font-black text-white";
+                    reactionSubtext.className = "text-base text-emerald-100 mt-3";
+                    break;
+                case 'penalty':
+                    reactionBox.classList.add('bg-amber-600', 'border-amber-500');
+                    reactionText.innerText = "너무 성급했습니다! (예측 금지)";
+                    reactionSubtext.innerText = "화면을 클릭해 이번 라운드를 재도전하세요 (+100ms 페널티)";
+                    reactionText.className = "text-2xl md:text-3xl font-bold text-white";
+                    reactionSubtext.className = "text-base text-amber-100 mt-3";
+                    break;
+                case 'success':
+                    reactionBox.classList.add('bg-slate-850', 'border-slate-700');
+                    reactionText.className = "text-2xl md:text-3xl font-bold text-slate-200";
+                    reactionSubtext.className = "text-base text-slate-400 mt-3";
+                    break;
+            }
+        }
+
+        function handleReactionTrigger() {
+            if (reactionState === 'waiting') {
+                reactionState = 'holding';
+                setReactionUiState('holding');
+
+                const randomDelay = Math.random() * 3000 + 2000;
+                reactionTimeout = setTimeout(() => {
+                    reactionState = 'changing';
+                    setReactionUiState('changing');
+                    reactionStartTime = Date.now();
+                }, randomDelay);
+
+            } else if (reactionState === 'holding') {
+                clearTimeout(reactionTimeout);
+                reactionState = 'penalty';
+                setReactionUiState('penalty');
+
+            } else if (reactionState === 'penalty') {
+                reactionState = 'waiting';
+                setReactionUiState('waiting');
+
+            } else if (reactionState === 'changing') {
+                const elapsed = Date.now() - reactionStartTime;
+                reactionState = 'success';
+                setReactionUiState('success');
+                
+                processReactionResult(elapsed);
+            } else if (reactionState === 'success') {
+                if (reactionAttempts < totalReactionAttempts) {
+                    reactionState = 'waiting';
+                    setReactionUiState('waiting');
+                }
+            }
+        }
+
+        function processReactionResult(timeMs) {
+            reactionAttempts++;
+            state.scores.reaction.push(timeMs);
+            
+            document.getElementById(`rec-val-${reactionAttempts}`).innerText = `${timeMs}ms`;
+            
+            const avg = Math.round(state.scores.reaction.reduce((a, b) => a + b, 0) / state.scores.reaction.length);
+            reactionAvgDisplay.innerText = `${avg} ms`;
+
+            reactionText.innerText = `${reactionAttempts}회차 기록: ${timeMs}ms`;
+            
+            if (reactionAttempts < totalReactionAttempts) {
+                reactionSubtext.innerText = "클릭하여 다음 도전을 준비하세요.";
+                reactionAttemptDisplay.innerText = `${reactionAttempts + 1} / ${totalReactionAttempts}`;
+            } else {
+                reactionSubtext.innerText = "모든 반응성 측정을 마무리했습니다.";
+                reactionAttemptDisplay.innerText = `완료`;
+                finishReactionGame();
+            }
+        }
+
+        reactionBox.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            handleReactionTrigger();
+        });
+
+        function finishReactionGame() {
+            reactionState = 'completed';
+            
+            const avg = Math.round(state.scores.reaction.reduce((a, b) => a + b, 0) / state.scores.reaction.length);
+            
+            let score = 0;
+            if (avg <= 150) {
+                score = 100;
+            } else if (avg >= 500) {
+                score = 10;
+            } else {
+                score = Math.round(100 - ((avg - 150) / 350) * 90);
+            }
+            state.calculatedScores.reaction = score;
+
+            buttons.reactionNext.classList.remove('hidden');
+        }
+
+        buttons.reactionNext.addEventListener('click', () => {
+            initAimGame();
+            changeScreen('aim');
+        });
+
+
+        // --- GAME 3: AIM TEST ENGINE ---
+        let aimActive = false;
+        let aimTimerInterval = null;
+        let aimTimeRemaining = 15.0;
+        let aimHits = 0;
+        let aimMisses = 0;
+
+        const aimBoard = document.getElementById('aim-board');
+        const aimTarget = document.getElementById('aim-target');
+        const aimOverlay = document.getElementById('aim-overlay');
+        const aimTimerDisplay = document.getElementById('aim-timer');
+        const aimScoreDisplay = document.getElementById('aim-score');
+        const aimMissDisplay = document.getElementById('aim-miss');
+
+        function initAimGame() {
+            aimActive = false;
+            clearInterval(aimTimerInterval);
+            aimTimeRemaining = 15.0;
+            aimHits = 0;
+            aimMisses = 0;
+
+            aimTimerDisplay.innerText = "15.0s";
+            aimScoreDisplay.innerText = "0";
+            aimMissDisplay.innerText = "0";
+
+            aimOverlay.classList.remove('hidden');
+            aimTarget.classList.add('hidden');
+
+            buttons.aimStart.disabled = false;
+            buttons.aimStart.innerText = "준비완료! 시작";
+            buttons.aimStart.className = "px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-all text-lg active:scale-95";
+        }
+
+        buttons.aimStart.addEventListener('click', startAimCountdown);
+
+        function startAimCountdown() {
+            buttons.aimStart.disabled = true;
+            buttons.aimStart.className = "px-10 py-4 bg-slate-800 text-slate-500 font-bold rounded-lg cursor-not-allowed transition-all text-lg";
+            
+            let count = 3;
+            buttons.aimStart.innerText = `${count}...`;
+            
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    buttons.aimStart.innerText = `${count}...`;
+                } else {
+                    clearInterval(countInterval);
+                    buttons.aimStart.innerText = "시작!!!";
+                    setTimeout(() => {
+                        aimOverlay.classList.add('hidden');
+                        startAimGame();
+                    }, 400);
+                }
+            }, 1000);
+        }
+
+        function startAimGame() {
+            aimActive = true;
+            aimHits = 0;
+            aimMisses = 0;
+            aimTarget.classList.remove('hidden');
+            
+            moveAimTarget();
+
+            const startTime = Date.now();
+            const totalDuration = 15000;
+
+            aimTimerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                aimTimeRemaining = Math.max(0, (totalDuration - elapsed) / 1000);
+                aimTimerDisplay.innerText = aimTimeRemaining.toFixed(1) + "s";
+
+                if (aimTimeRemaining <= 0) {
+                    endAimGame();
+                }
+            }, 100);
+        }
+
+        function moveAimTarget() {
+            if (!aimActive) return;
+
+            const boardWidth = aimBoard.clientWidth;
+            const boardHeight = aimBoard.clientHeight;
+            const targetSize = window.innerWidth < 768 ? 40 : 48; // Sized up targets to match larger screen
+
+            const maxX = boardWidth - targetSize;
+            const maxY = boardHeight - targetSize;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            aimTarget.style.left = `${randomX}px`;
+            aimTarget.style.top = `${randomY}px`;
+        }
+
+        aimTarget.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            if (!aimActive) return;
+
+            aimHits++;
+            aimScoreDisplay.innerText = aimHits;
+            
+            createHitRipple(e.clientX, e.clientY);
+            moveAimTarget();
+        });
+
+        aimBoard.addEventListener('pointerdown', (e) => {
+            if (!aimActive) return;
+
+            aimMisses++;
+            aimMissDisplay.innerText = aimMisses;
+
+            aimBoard.classList.remove('bg-slate-950');
+            aimBoard.classList.add('bg-rose-950/20');
+            setTimeout(() => {
+                aimBoard.classList.remove('bg-rose-950/20');
+                aimBoard.classList.add('bg-slate-950');
+            }, 100);
+        });
+
+        function createHitRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.className = "fixed w-12 h-12 border-2 border-cyan-400 rounded-full pointer-events-none transform -translate-x-1/2 -translate-y-1/2 animate-ping z-50";
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => {
+                ripple.remove();
+            }, 500);
+        }
+
+        function endAimGame() {
+            aimActive = false;
+            clearInterval(aimTimerInterval);
+            aimTarget.classList.add('hidden');
+
+            state.scores.aimHits = aimHits;
+            state.scores.aimMiss = aimMisses;
+
+            let hitScore = (aimHits / 25) * 100;
+            let finalAimScore = Math.round(hitScore - (aimMisses * 3));
+            if (finalAimScore > 100) finalAimScore = 100;
+            if (finalAimScore < 10) finalAimScore = 10;
+
+            state.calculatedScores.aim = finalAimScore;
+            showResultScreen();
+        }
+
+
+        // --- REPORT & GRAPH GENERATOR ---
+        function getTierLabel(score) {
+            if (score >= 95) return { tier: 'GOD', color: 'text-amber-400' };
+            if (score >= 85) return { tier: 'S-Class', color: 'text-orange-500' };
+            if (score >= 70) return { tier: 'A-Class', color: 'text-indigo-400' };
+            if (score >= 55) return { tier: 'B-Class', color: 'text-emerald-400' };
+            if (score >= 40) return { tier: 'C-Class', color: 'text-cyan-400' };
+            return { tier: 'D-Class', color: 'text-slate-500' };
+        }
+
+        function showResultScreen() {
+            changeScreen('result');
+
+            // Reset Save UI
+            document.getElementById('player-name').disabled = false;
+            document.getElementById('player-name').value = '';
+            buttons.saveRecord.classList.remove('hidden');
+            buttons.saveRecord.disabled = false;
+            buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장';
+
+            const tapScore = state.calculatedScores.tap;
+            const reactionScore = state.calculatedScores.reaction;
+            const aimScore = state.calculatedScores.aim;
+
+            const totalSum = tapScore + reactionScore + aimScore;
+            state.finalScore = Math.round(totalSum);
+
+            const overallPercentage = totalSum / 3;
+            let tierInfo = getTierLabel(overallPercentage);
+            
+            const finalTierEl = document.getElementById('final-tier');
+            finalTierEl.innerText = tierInfo.tier;
+            finalTierEl.className = `text-3xl font-black bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent`;
+            
+            document.getElementById('final-score').innerText = `${state.finalScore}점`;
+
+            const cps = (state.scores.tap / 10).toFixed(1);
+            document.getElementById('result-tap-detail').innerText = `${state.scores.tap}회 클릭 (${cps} CPS)`;
+            document.getElementById('result-tap-score').innerText = `${tapScore}점`;
+            const tapTierInfo = getTierLabel(tapScore);
+            document.getElementById('result-tap-tier').innerText = tapTierInfo.tier;
+            document.getElementById('result-tap-tier').className = `text-xs font-semibold ${tapTierInfo.color}`;
+
+            const avgReact = state.scores.reaction.length > 0 ? Math.round(state.scores.reaction.reduce((a,b)=>a+b, 0) / state.scores.reaction.length) : 0;
+            document.getElementById('result-reaction-detail').innerText = `평균 반응속도: ${avgReact}ms`;
+            document.getElementById('result-reaction-score').innerText = `${reactionScore}점`;
+            const reactTierInfo = getTierLabel(reactionScore);
+            document.getElementById('result-reaction-tier').innerText = reactTierInfo.tier;
+            document.getElementById('result-reaction-tier').className = `text-xs font-semibold ${reactTierInfo.color}`;
+
+            document.getElementById('result-aim-detail').innerText = `타겟 명중 ${state.scores.aimHits}회 / 오클릭 ${state.scores.aimMiss}회`;
+            document.getElementById('result-aim-score').innerText = `${aimScore}점`;
+            const aimTierInfo = getTierLabel(aimScore);
+            document.getElementById('result-aim-tier').innerText = aimTierInfo.tier;
+            document.getElementById('result-aim-tier').className = `text-xs font-semibold ${aimTierInfo.color}`;
+
+            generateAnalysisText(cps, avgReact, state.scores.aimHits, state.scores.aimMiss, tierInfo.tier);
+            renderResultChart(tapScore, reactionScore, aimScore);
+        }
+
+        function generateAnalysisText(cps, reaction, hits, miss, tier) {
+            let desc = `종합 등급 **${tier}** 기록자입니다. `;
+            if (cps >= 8) desc += "초고속 연타 실력을 갖추어 속사형 전투 게임에 우수한 면모를 보입니다. ";
+            else if (cps >= 5) desc += "평균적인 타건 연사 속도를 가졌으며 실전 게임에서 누락 없는 딜 연계가 가능합니다. ";
+            else desc += "안정성을 우선시하지만 가끔 긴박한 연타 싸움에서 딜레이가 발생할 수 있습니다. ";
+
+            if (reaction <= 220) desc += "반응 속도가 대단히 빠릅니다. 적의 기습 공격을 순식간에 차단할 완벽한 시신경 반응 속도를 자랑하네요. ";
+            else if (reaction <= 280) desc += "보편적인 게이머 수준의 안정적이고 흐트러짐 없는 반응성을 가졌습니다. ";
+            else desc += "집중력의 흐려짐이나 미세한 긴장 지연이 감지되므로 컨디션 조절이 필요합니다. ";
+
+            if (hits >= 20 && miss <= 2) desc += "마치 자석을 붙인 듯한 경이롭고 깔끔한 마우스 정밀 타격을 보여줍니다.";
+            else if (hits >= 12) desc += "준수한 에임 실력을 지녔으나 빠른 조준 과정에서 간혹 빗나가는 실수가 섞여있습니다.";
+            else desc += "안정된 에이밍을 위해서 마우스 감도(DPI) 조정이나 안정적인 그립법 연습을 추천해 드립니다.";
+
+            document.getElementById('analysis-text').innerText = desc;
+        }
+
+        function renderResultChart(tap, reaction, aim) {
+            const ctx = document.getElementById('result-chart').getContext('2d');
+            if (state.radarChart) state.radarChart.destroy();
+
+            state.radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['연타 속도 (Tapping)', '반응 속도 (Reaction)', '에임 제어 (Aiming)'],
+                    datasets: [{
+                        label: '나의 피지컬 지표',
+                        data: [tap, reaction, aim],
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: 'rgba(99, 102, 241, 0.8)',
+                        borderWidth: 3,
+                        pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(71, 85, 105, 0.4)' },
+                            grid: { color: 'rgba(71, 85, 105, 0.4)' },
+                            pointLabels: {
+                                color: '#94a3b8',
+                                font: { size: 13, weight: 'bold', family: 'Pretendard' }
+                            },
+                            ticks: { display: false, stepSize: 20 },
+                            suggestedMin: 10,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action Buttons Event Listeners
+        buttons.restart.addEventListener('click', () => {
+            resetTapGame();
+            changeScreen('intro');
+        });
+
+        buttons.share.addEventListener('click', () => {
+            const cps = (state.scores.tap / 10).toFixed(1);
+            const avgReact = state.scores.reaction.length > 0 ? Math.round(state.scores.reaction.reduce((a,b)=>a+b, 0) / state.scores.reaction.length) : 0;
+            
+            const shareText = `🎯 ATR Test 결과 보고서 🎯\n` + 
+                              `---------------------------------------\n` +
+                              `🏆 종합 점수: ${state.finalScore}점\n` +
+                              `🎹 연타 속도: ${state.scores.tap}회 (${cps} CPS)\n` +
+                              `⚡ 반응 속도: 평균 ${avgReact}ms\n` +
+                              `🎯 에임 감각: 명중 ${state.scores.aimHits}회 / 미스 ${state.scores.aimMiss}회\n` +
+                              `---------------------------------------\n` +
+                              `지금 여러분도 가볍게 자가 피지컬 진단을 시작해 보세요!`;
+
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = shareText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCustomAlert("복사 완료!", "결과 텍스트가 클립보드에 복사되었습니다! SNS나 친구들에게 공유해보세요.", false);
+            } catch (err) {
+                showCustomAlert("복사 실패", "브라우저에서 복사 기능을 지원하지 않습니다. 텍스트를 드래그해서 직접 복사해 주세요.");
+            }
+            document.body.removeChild(tempTextArea);
+        });
+
+        buttons.saveRecord.addEventListener('click', async () => {
+            const nameInput = document.getElementById('player-name').value.trim();
+            if (!nameInput) {
+                showCustomAlert("알림", "닉네임을 입력해주세요!");
+                return;
+            }
+
+            buttons.saveRecord.disabled = true;
+            buttons.saveRecord.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>저장 중...';
+
+            const avgReaction = state.scores.reaction.length > 0 ? Math.round(state.scores.reaction.reduce((a,b)=>a+b, 0) / state.scores.reaction.length) : 0;
+            const newRecord = {
+                name: nameInput,
+                score: state.finalScore,
+                tap: state.scores.tap,
+                reaction: avgReaction,
+                aimHits: state.scores.aimHits,
+                aimMiss: state.scores.aimMiss
+            };
+
+            if (isFirebaseActive && db) {
+                try {
+                    const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                    await addDoc(lbRef, {
+                        ...newRecord,
+                        timestamp: serverTimestamp()
+                    });
+                    
+                    showCustomAlert("성공!", "명예의 전당에 기록이 저장되었습니다.", false);
+                    buttons.saveRecord.classList.add('hidden');
+                    document.getElementById('player-name').disabled = true;
+                } catch (err) {
+                    console.error("Save error:", err);
+                    showCustomAlert("저장 실패", "기록 저장 중 오류가 발생했습니다.");
+                    buttons.saveRecord.disabled = false;
+                    buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장';
+                }
+            } else {
+                // Offline Fallback Session Storage
+                leaderboardData.push(newRecord);
+                leaderboardData.sort((a, b) => b.score - a.score);
+                renderLeaderboard();
+                
+                showCustomAlert("로컬 저장 완료!", "로컬 명예의 전당 세션에 임시로 기록이 보관되었습니다.", false);
+                buttons.saveRecord.classList.add('hidden');
+                document.getElementById('player-name').disabled = true;
+            }
+        });
+
+        buttons.introLeaderboard.addEventListener('click', () => {
+            state.previousScreen = 'intro';
+            changeScreen('leaderboard');
+        });
+
+        buttons.viewLeaderboard.addEventListener('click', () => {
+            state.previousScreen = 'result';
+            changeScreen('leaderboard');
+        });
+
+        buttons.leaderboardClose.addEventListener('click', () => {
+            changeScreen(state.previousScreen || 'intro');
+        });
+
+    </script>
+</body>
+</html>
