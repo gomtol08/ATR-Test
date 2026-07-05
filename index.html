@@ -55,7 +55,7 @@
                     <i class="fa-solid fa-circle-nodes mr-1"></i>로컬 오프라인 모드
                 </div>
                 <div class="text-sm text-slate-400 font-medium hidden sm:block">
-                    v1.5.2
+                    v1.6.0 (Global Ready)
                 </div>
             </div>
         </div>
@@ -246,9 +246,8 @@
                     </div>
                 </div>
 
-                <!-- Aiming Area Container (16:9 cinematic aspect ratio and expanded max-height with automatic sizing) -->
+                <!-- Aiming Area Container -->
                 <div class="relative w-full aspect-[16/9] max-h-[550px] bg-slate-950 border border-slate-800 rounded-xl overflow-hidden cursor-crosshair shadow-inner mx-auto transition-all duration-300" id="aim-board">
-                    <!-- Ready overlays / Start screen -->
                     <div id="aim-overlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col justify-center items-center z-10 space-y-5">
                         <i class="fa-solid fa-bullseye text-6xl text-cyan-500 animate-pulse"></i>
                         <h3 class="text-2xl font-bold">에임 트레이닝 시작하기</h3>
@@ -256,10 +255,7 @@
                             준비완료! 시작
                         </button>
                     </div>
-
-                    <!-- The Target Element (Fully auto-responsive sizing) -->
                     <div id="aim-target" class="absolute w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 border-2 border-white shadow-[0_0_15px_rgba(34,211,238,0.5)] cursor-pointer hidden select-none transition-all duration-75">
-                        <!-- Inside small dot for bullseye feel -->
                         <div class="absolute inset-3 bg-white rounded-full opacity-60"></div>
                     </div>
                 </div>
@@ -273,7 +269,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                    
                     <!-- Chart Section -->
                     <div class="bg-slate-950 p-8 rounded-xl border border-slate-850 flex flex-col items-center justify-center">
                         <span class="text-base font-semibold text-slate-400 mb-4">하드웨어 피지컬 육각형 그래프</span>
@@ -297,7 +292,6 @@
 
                         <!-- Grid details -->
                         <div class="space-y-4">
-                            <!-- Tap Score Row -->
                             <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
                                 <div class="flex items-center space-x-4">
                                     <span class="text-pink-500 text-2xl w-8 text-center"><i class="fa-solid fa-keyboard"></i></span>
@@ -311,8 +305,6 @@
                                     <div id="result-tap-tier" class="text-xs font-semibold text-pink-400">A급</div>
                                 </div>
                             </div>
-
-                            <!-- Reaction Score Row -->
                             <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
                                 <div class="flex items-center space-x-4">
                                     <span class="text-emerald-500 text-2xl w-8 text-center"><i class="fa-solid fa-gauge-high"></i></span>
@@ -326,8 +318,6 @@
                                     <div id="result-reaction-tier" class="text-xs font-semibold text-emerald-400">B급</div>
                                 </div>
                             </div>
-
-                            <!-- Aim Score Row -->
                             <div class="flex items-center justify-between p-5 bg-slate-850 border border-slate-800 rounded-lg">
                                 <div class="flex items-center space-x-4">
                                     <span class="text-cyan-500 text-2xl w-8 text-center"><i class="fa-solid fa-crosshairs"></i></span>
@@ -342,7 +332,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -356,11 +345,11 @@
 
                 <!-- Record Save Section -->
                 <div class="bg-slate-900 border border-indigo-500/50 p-6 rounded-xl space-y-4">
-                    <h4 class="text-base font-bold text-indigo-400">명예의 전당 (리더보드) 등록</h4>
+                    <h4 class="text-base font-bold text-indigo-400">글로벌 명예의 전당 (리더보드) 등록</h4>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <input type="text" id="player-name" placeholder="닉네임을 입력하세요" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors text-base" maxlength="10">
                         <button id="btn-save-record" class="py-3 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition-all text-base whitespace-nowrap">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i>온라인 기록 저장
                         </button>
                         <button id="btn-view-leaderboard" class="py-3 px-8 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg transition-all text-base whitespace-nowrap">
                             <i class="fa-solid fa-trophy mr-2"></i>순위 보기
@@ -382,7 +371,7 @@
             <!-- 6. LEADERBOARD SCREEN -->
             <div id="screen-leaderboard" class="hidden space-y-6 py-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                    <span class="text-yellow-500 font-bold text-2xl"><i class="fa-solid fa-trophy mr-2"></i>명예의 전당 (Top 10)</span>
+                    <span class="text-yellow-500 font-bold text-2xl"><i class="fa-solid fa-trophy mr-2"></i>글로벌 명예의 전당 (Top 10)</span>
                 </div>
                 
                 <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden">
@@ -442,42 +431,72 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Variables
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // =========================================================================================
+        // 🔥 온라인 글로벌 랭킹을 켜려면 아래 myFirebaseConfig에 본인의 Firebase 설정을 붙여넣으세요! 🔥
+        // =========================================================================================
+        const myFirebaseConfig = {
+            apiKey: "AIzaSyCNHfIGK3DrFAK-a8Bp4WYMJOGfr3KFNQU",
+            authDomain: "atr-test-b66e6.firebaseapp.com",
+            projectId: "atr-test-b66e6",
+            storageBucket: "atr-test-b66e6.firebasestorage.app",
+            messagingSenderId: "897737849712",
+            appId: "1:897737849712:web:45b89fe5d8a80272be6db5",
+            measurementId: "G-V68XSQXH93"
+        };
+        // =========================================================================================
+
         let db = null;
         let auth = null;
         let currentUser = null;
         let isFirebaseActive = false;
+        
+        // 사용자가 위 설정란에 직접 키 값을 넣었는지 확인 (글로벌 모드)
+        const isCustomFirebase = myFirebaseConfig.apiKey ? true : false; 
 
-        // Offline Leaderboard Fallback (아무 기록도 없는 빈 리스트로 초기화)
+        // 오프라인/로컬용 임시 저장 데이터 (기본 빈 배열)
         let leaderboardData = [];
 
-        // Safe Firebase Initialization Try-Catch Block
+        // 안전한 Firebase 초기화 시스템
         try {
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                if (firebaseConfig.apiKey && firebaseConfig.projectId) {
-                    const app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-                    isFirebaseActive = true;
-                    
-                    const badge = document.getElementById('connection-badge');
-                    badge.innerHTML = '<i class="fa-solid fa-circle-nodes mr-1"></i>클라우드 동기화 모드';
+            let configToUse = null;
+
+            // 1순위: 사용자가 직접 입력한 Firebase 환경 (글로벌 온라인)
+            if (isCustomFirebase) {
+                configToUse = myFirebaseConfig;
+            } 
+            // 2순위: 이 화면(캔버스 미리보기)의 기본 제공 환경
+            else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                configToUse = JSON.parse(__firebase_config);
+            }
+
+            if (configToUse && configToUse.apiKey) {
+                const app = initializeApp(configToUse);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                isFirebaseActive = true;
+                
+                const badge = document.getElementById('connection-badge');
+                if (isCustomFirebase) {
+                    badge.innerHTML = '<i class="fa-solid fa-earth-americas mr-1"></i>온라인 글로벌 랭킹 (동작 중)';
+                    badge.className = "text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-400 font-semibold";
+                } else {
+                    badge.innerHTML = '<i class="fa-solid fa-circle-nodes mr-1"></i>미리보기 환경 동기화';
                     badge.className = "text-xs px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-semibold";
                 }
             }
         } catch (error) {
-            console.warn("Firebase 연결 제한 - 로컬 오프라인 모드로 자동 안전 구동됩니다.", error);
+            console.warn("Firebase 연결 실패 - 로컬 오프라인 모드로 안전 구동됩니다.", error);
         }
 
+        // 인증 로그인 시스템
         const initAuth = async () => {
             if (!isFirebaseActive || !auth) return;
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                // 커스텀 DB이거나 토큰이 없을때는 '익명 로그인'으로 누구나 접속 가능하게 함
+                if (!isCustomFirebase && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    await signInAnonymously(auth);
+                    await signInAnonymously(auth); // Firebase Auth에서 익명로그인을 반드시 켜주세요!
                 }
             } catch (error) {
                 console.error("Firebase auth failed:", error);
@@ -496,9 +515,19 @@
             renderLeaderboard();
         }
 
+        // DB 컬렉션 참조 가져오기 (커스텀 DB일 땐 루트 컬렉션 사용)
+        function getCollectionRef() {
+            if (isCustomFirebase) {
+                return collection(db, 'global_leaderboard');
+            } else {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                return collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            }
+        }
+
         function subscribeToLeaderboard() {
             if (!isFirebaseActive || !db) return;
-            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            const lbRef = getCollectionRef();
             onSnapshot(lbRef, (snapshot) => {
                 leaderboardData = [];
                 snapshot.forEach((doc) => {
@@ -519,7 +548,7 @@
                 listEl.innerHTML = `
                     <tr class="border-b border-slate-800 bg-slate-900/50">
                         <td colspan="3" class="px-6 py-16 text-center text-slate-500">
-                            아직 등록된 기록이 없습니다. 첫 번째 랭커가 되어보세요!
+                            아직 등록된 기록이 없습니다. 전 세계 첫 번째 랭커가 되어보세요!
                         </td>
                     </tr>
                 `;
@@ -563,7 +592,6 @@
             radarChart: null
         };
 
-        // DOM elements
         const screens = {
             intro: document.getElementById('screen-intro'),
             tap: document.getElementById('screen-tap'),
@@ -636,11 +664,9 @@
         const tapTimerDisplay = document.getElementById('tap-timer');
 
         buttons.start.addEventListener('click', () => {
-            // 한 판이 끝나고 다시 시작할 때 모든 점수 스키마 초기화 보장
             state.scores = { tap: 0, reaction: [], aimHits: 0, aimMiss: 0 };
             state.calculatedScores = { tap: 0, reaction: 0, aim: 0 };
             state.finalScore = 0;
-            
             resetTapGame();
             changeScreen('tap');
         });
@@ -657,7 +683,7 @@
             tapTimerDisplay.innerText = "10.0s";
             buttons.tapStart.innerText = "카운트다운 시작";
             buttons.tapStart.disabled = false;
-            buttons.tapStart.onclick = null; // [중요] 이전 판에서 동적 할당된 반응속도 전이용 onclick 핸들러 완벽 리셋
+            buttons.tapStart.onclick = null; 
             buttons.tapStart.className = "w-full py-4 bg-pink-600 hover:bg-pink-500 text-white font-bold text-lg rounded-xl transition-all";
             tapArea.classList.add('opacity-50', 'pointer-events-none');
         }
@@ -717,9 +743,7 @@
             registerTap();
         });
 
-        // Global key listeners safely routed
         let isArrowUpPressed = false;
-
         window.addEventListener('keydown', (e) => {
             if (e.code === 'ArrowUp') {
                 e.preventDefault();
@@ -746,7 +770,6 @@
             tapArea.classList.add('opacity-50', 'pointer-events-none');
             
             state.scores.tap = tapClickCount;
-            
             const cps = tapClickCount / 10;
             let score = Math.round((cps / 11) * 100);
             if (score > 100) score = 100;
@@ -763,7 +786,6 @@
                 changeScreen('reaction');
             };
         }
-
 
         // --- GAME 2: REACTION TEST ENGINE ---
         let reactionState = 'waiting';
@@ -838,28 +860,23 @@
             if (reactionState === 'waiting') {
                 reactionState = 'holding';
                 setReactionUiState('holding');
-
                 const randomDelay = Math.random() * 3000 + 2000;
                 reactionTimeout = setTimeout(() => {
                     reactionState = 'changing';
                     setReactionUiState('changing');
                     reactionStartTime = Date.now();
                 }, randomDelay);
-
             } else if (reactionState === 'holding') {
                 clearTimeout(reactionTimeout);
                 reactionState = 'penalty';
                 setReactionUiState('penalty');
-
             } else if (reactionState === 'penalty') {
                 reactionState = 'waiting';
                 setReactionUiState('waiting');
-
             } else if (reactionState === 'changing') {
                 const elapsed = Date.now() - reactionStartTime;
                 reactionState = 'success';
                 setReactionUiState('success');
-                
                 processReactionResult(elapsed);
             } else if (reactionState === 'success') {
                 if (reactionAttempts < totalReactionAttempts) {
@@ -872,12 +889,10 @@
         function processReactionResult(timeMs) {
             reactionAttempts++;
             state.scores.reaction.push(timeMs);
-            
             document.getElementById(`rec-val-${reactionAttempts}`).innerText = `${timeMs}ms`;
             
             const avg = Math.round(state.scores.reaction.reduce((a, b) => a + b, 0) / state.scores.reaction.length);
             reactionAvgDisplay.innerText = `${avg} ms`;
-
             reactionText.innerText = `${reactionAttempts}회차 기록: ${timeMs}ms`;
             
             if (reactionAttempts < totalReactionAttempts) {
@@ -897,17 +912,12 @@
 
         function finishReactionGame() {
             reactionState = 'completed';
-            
             const avg = Math.round(state.scores.reaction.reduce((a, b) => a + b, 0) / state.scores.reaction.length);
             
             let score = 0;
-            if (avg <= 150) {
-                score = 100;
-            } else if (avg >= 500) {
-                score = 10;
-            } else {
-                score = Math.round(100 - ((avg - 150) / 350) * 90);
-            }
+            if (avg <= 150) { score = 100; }
+            else if (avg >= 500) { score = 10; }
+            else { score = Math.round(100 - ((avg - 150) / 350) * 90); }
             state.calculatedScores.reaction = score;
 
             buttons.reactionNext.classList.remove('hidden');
@@ -917,7 +927,6 @@
             initAimGame();
             changeScreen('aim');
         });
-
 
         // --- GAME 3: AIM TEST ENGINE ---
         let aimActive = false;
@@ -1003,7 +1012,7 @@
 
             const boardWidth = aimBoard.clientWidth;
             const boardHeight = aimBoard.clientHeight;
-            const targetSize = window.innerWidth < 768 ? 40 : 48; // Sized up targets to match larger screen
+            const targetSize = window.innerWidth < 768 ? 40 : 48;
 
             const maxX = boardWidth - targetSize;
             const maxY = boardHeight - targetSize;
@@ -1067,7 +1076,6 @@
             showResultScreen();
         }
 
-
         // --- REPORT & GRAPH GENERATOR ---
         function getTierLabel(score) {
             if (score >= 95) return { tier: 'GOD', color: 'text-amber-400' };
@@ -1081,12 +1089,11 @@
         function showResultScreen() {
             changeScreen('result');
 
-            // Reset Save UI
             document.getElementById('player-name').disabled = false;
             document.getElementById('player-name').value = '';
             buttons.saveRecord.classList.remove('hidden');
             buttons.saveRecord.disabled = false;
-            buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장';
+            buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>온라인 기록 저장';
 
             const tapScore = state.calculatedScores.tap;
             const reactionScore = state.calculatedScores.reaction;
@@ -1187,7 +1194,6 @@
             });
         }
 
-        // Action Buttons Event Listeners
         buttons.restart.addEventListener('click', () => {
             resetTapGame();
             changeScreen('intro');
@@ -1242,28 +1248,27 @@
 
             if (isFirebaseActive && db) {
                 try {
-                    const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                    const lbRef = getCollectionRef();
                     await addDoc(lbRef, {
                         ...newRecord,
                         timestamp: serverTimestamp()
                     });
                     
-                    showCustomAlert("성공!", "명예의 전당에 기록이 저장되었습니다.", false);
+                    showCustomAlert("성공!", "글로벌 명예의 전당에 기록이 저장되었습니다.", false);
                     buttons.saveRecord.classList.add('hidden');
                     document.getElementById('player-name').disabled = true;
                 } catch (err) {
                     console.error("Save error:", err);
                     showCustomAlert("저장 실패", "기록 저장 중 오류가 발생했습니다.");
                     buttons.saveRecord.disabled = false;
-                    buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>기록 저장';
+                    buttons.saveRecord.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i>온라인 기록 저장';
                 }
             } else {
-                // Offline Fallback Session Storage
                 leaderboardData.push(newRecord);
                 leaderboardData.sort((a, b) => b.score - a.score);
                 renderLeaderboard();
                 
-                showCustomAlert("로컬 저장 완료!", "로컬 명예의 전당 세션에 임시로 기록이 보관되었습니다.", false);
+                showCustomAlert("로컬 저장 완료!", "로컬 명예의 전당 세션에 임시로 기록이 보관되었습니다. (웹을 끄면 사라집니다)", false);
                 buttons.saveRecord.classList.add('hidden');
                 document.getElementById('player-name').disabled = true;
             }
